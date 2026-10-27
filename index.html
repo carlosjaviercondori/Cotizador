@@ -88,9 +88,25 @@ Entrega inmediata. Validez de la oferta: 10 días.</textarea>
 
       <div class="form-actions">
         <button id="clear-form" class="button button-secondary" type="button">Limpiar</button>
-        <button class="button button-primary button-large" type="submit">Generar cotización</button>
+        <button id="submit-quote" class="button button-primary button-large" type="submit">Generar cotización</button>
       </div>
     </form>
+
+    <section class="card history-card">
+      <div class="section-heading">
+        <div>
+          <span class="step">04</span>
+          <h2>Historial de cotizaciones</h2>
+        </div>
+        <span id="history-count" class="history-count">0 cotizaciones</span>
+      </div>
+      <label class="history-search">Buscar por nombre del cliente
+        <input id="history-search" type="search" placeholder="Escribí el nombre del cliente">
+      </label>
+      <p id="history-summary" class="history-summary"></p>
+      <p id="history-empty" class="history-empty">Todavía no hay cotizaciones guardadas.</p>
+      <div id="history-list" class="history-list"></div>
+    </section>
   </main>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>

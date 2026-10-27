@@ -56,6 +56,20 @@ td input { padding: 10px; width: 100%; }
 .total-line span { color: var(--muted); font-weight: 600; }
 .total-line strong { color: var(--navy); font-size: 1.45rem; }
 .form-actions { display: flex; justify-content: flex-end; gap: 12px; padding-top: 6px; }
+.history-count { color: var(--muted); font-size: .85rem; font-weight: 600; }
+.history-search { margin-bottom: 16px; max-width: 440px; }
+.history-summary { color: var(--muted); font-size: .82rem; margin: -4px 0 14px; }
+.history-empty { color: var(--muted); font-size: .92rem; margin: 0; }
+.history-list { display: grid; gap: 10px; }
+.history-entry { align-items: center; border: 1px solid var(--line); border-radius: 9px; display: flex; gap: 18px; justify-content: space-between; padding: 14px 16px; }
+.history-entry:hover { border-color: #b6c8da; }
+.history-info { min-width: 0; }
+.history-customer { color: var(--navy); font-weight: 700; margin: 0 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-meta { color: var(--muted); font-size: .82rem; margin: 0; }
+.history-actions { display: flex; flex-shrink: 0; gap: 8px; }
+.history-actions .button { font-size: .8rem; padding: 8px 12px; }
+.button-danger { background: #fff0f1; color: var(--danger); }
+.button-danger:hover { background: #ffe0e3; }
 .toast { background: var(--navy); border-radius: 7px; bottom: 22px; color: white; opacity: 0; padding: 13px 18px; position: fixed; right: 22px; transform: translateY(14px); transition: opacity .2s, transform .2s; }
 .toast.visible { opacity: 1; transform: translateY(0); }
 .sr-only { height: 1px; margin: -1px; overflow: hidden; position: absolute; width: 1px; clip: rect(0, 0, 0, 0); }
@@ -70,6 +84,9 @@ td input { padding: 10px; width: 100%; }
   label.wide { grid-column: auto; }
   .form-actions { justify-content: stretch; }
   .form-actions .button { flex: 1; }
+  .history-entry { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .history-actions { width: 100%; }
+  .history-actions .button { flex: 1; }
 }
 @media print {
   @page { margin: 1.2cm; size: A4; }
@@ -78,7 +95,7 @@ td input { padding: 10px; width: 100%; }
   .app-header { align-items: flex-start; flex-direction: row; margin-bottom: 18px; }
   .app-header h1 { font-size: 2rem; }
   .brand-logo { height: 72px; }
-  .subtitle, .eyebrow, .step, .button, .form-actions, .actions-column, .remove-row { display: none !important; }
+  .subtitle, .eyebrow, .step, .button, .form-actions, .history-card, .actions-column, .remove-row { display: none !important; }
   .card { border: 0; box-shadow: none; margin-bottom: 12px; padding: 10px 0; }
   .section-heading { align-items: center; flex-direction: row; margin-bottom: 12px; }
   .table-heading { align-items: center; }
