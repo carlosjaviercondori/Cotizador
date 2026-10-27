@@ -18,9 +18,9 @@ const money = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS
 function addRow(item = {}) {
   const row = document.createElement("tr");
   row.innerHTML = `
-    <td><input class="quantity" type="number" min="0" step="any" value="${item.quantity ?? ""}" placeholder="0" aria-label="Cantidad"></td>
-    <td><input class="detail" type="text" value="${escapeHtml(item.detail ?? "")}" placeholder="Producto o servicio" aria-label="Detalle"></td>
-    <td><input class="unit-price" type="number" min="0" step="0.01" value="${item.unitPrice ?? ""}" placeholder="0,00" aria-label="Precio unitario final con IVA"></td>
+    <td><input class="quantity" type="number" min="0" step="any" value="${item.quantity ?? ""}" placeholder="0" aria-label="Cantidad" required></td>
+    <td><input class="detail" type="text" value="${escapeHtml(item.detail ?? "")}" placeholder="Producto o servicio" aria-label="Detalle" required></td>
+    <td><input class="unit-price" type="number" min="0" step="0.01" value="${item.unitPrice ?? ""}" placeholder="0,00" aria-label="Precio unitario final con IVA" required></td>
     <td><input class="row-total" type="text" value="${money.format(0)}" readonly aria-label="Precio total final"></td>
     <td><button class="remove-row" type="button" title="Quitar fila" aria-label="Quitar fila">×</button></td>
   `;
@@ -107,16 +107,9 @@ function getHistory() {
 function saveToHistory() {
   const quote = collectData();
   const history = getHistory();
-  const id = editingExisting && currentEditId
-    ? currentEditId
-    : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const savedQuote = { ...quote, id, savedAt: new Date().toISOString() };
-  const existingIndex = history.findIndex(item => item.id === id);
-  if (existingIndex >= 0) {
-    history[existingIndex] = savedQuote;
-  } else {
-    history.unshift(savedQuote);
-  }
+  history.unshift(savedQuote);
   localStorage.setItem(historyKey, JSON.stringify(history));
   currentEditId = null;
   editingExisting = false;
@@ -195,7 +188,7 @@ function formatDate(value) {
 }
 
 function updateSubmitButton() {
-  submitButton.textContent = currentEditId ? "Actualizar y generar" : "Generar cotización";
+  submitButton.textContent = editingExisting ?"Generar cotización": "Generar cotización";
 }
 
 function loadQuote(id) {
@@ -225,6 +218,20 @@ function showToast(message) {
   toast.textContent = message;
   toast.classList.add("visible");
   window.setTimeout(() => toast.classList.remove("visible"), 2600);
+}
+
+function validateQuote() {
+  form.querySelectorAll("input, textarea").forEach(field => field.setCustomValidity(""));
+  const missingFields = [...form.querySelectorAll("input[required], textarea[required]")]
+    .filter(field => !field.value.trim());
+  missingFields.forEach(field => field.setCustomValidity("Completá este campo antes de generar la cotización."));
+
+  if (!form.reportValidity()) {
+    showToast("Completá todos los campos antes de generar la cotización.");
+    missingFields[0]?.focus();
+    return false;
+  }
+  return true;
 }
 
 document.querySelector("#add-row").addEventListener("click", () => addRow());
@@ -264,6 +271,7 @@ historyList.addEventListener("click", event => {
 });
 form.addEventListener("submit", event => {
   event.preventDefault();
+  if (!validateQuote()) return;
   saveToHistory();
   saveDraft();
   window.print();

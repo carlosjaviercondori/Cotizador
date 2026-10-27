@@ -30,16 +30,16 @@
         </div>
         <div class="form-grid">
           <label>Cliente
-            <input id="customer" name="customer" type="text" placeholder="Nombre o razón social">
+            <input id="customer" name="customer" type="text" placeholder="Nombre o razón social" required>
           </label>
           <label>CUIT
-            <input id="tax-id" name="taxId" type="text" placeholder="Ej. 30-12345678-9">
+            <input id="tax-id" name="taxId" type="text" placeholder="Ej. 30-12345678-9" required>
           </label>
           <label class="wide">Dirección
-            <input id="address" name="address" type="text" placeholder="Dirección del cliente">
+            <input id="address" name="address" type="text" placeholder="Dirección del cliente" required>
           </label>
           <label>Vendedor
-            <input id="seller" name="seller" type="text" placeholder="Nombre del vendedor">
+            <input id="seller" name="seller" type="text" placeholder="Nombre del vendedor" required>
           </label>
         </div>
       </section>
@@ -81,7 +81,7 @@
             <h2>Condiciones comerciales</h2>
           </div>
         </div>
-        <textarea id="terms" name="terms" rows="3">Los precios incluyen IVA.
+        <textarea id="terms" name="terms" rows="3" required>Los precios incluyen IVA.
 Contado, efectivo, transferencia o débito.
 Entrega inmediata. Validez de la oferta: 10 días.</textarea>
       </section>
