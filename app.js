@@ -19,13 +19,23 @@ function addRow(item = {}) {
   const row = document.createElement("tr");
   row.innerHTML = `
     <td><input class="quantity" type="number" min="0" step="any" value="${item.quantity ?? ""}" placeholder="0" aria-label="Cantidad" required></td>
-    <td><input class="detail" type="text" value="${escapeHtml(item.detail ?? "")}" placeholder="Producto o servicio" aria-label="Detalle" required></td>
-    <td><input class="unit-price" type="number" min="0" step="0.01" value="${item.unitPrice ?? ""}" placeholder="0,00" aria-label="Precio unitario final con IVA" required></td>
+    <td class="detail-cell"><input class="detail" type="text" value="${escapeHtml(item.detail ?? "")}" placeholder="Producto o servicio" aria-label="Detalle" required></td>
+    <td><input class="unit-price" type="text" inputmode="decimal" value="${item.unitPrice ? money.format(parseMoneyInput(item.unitPrice)) : ""}" placeholder="$ 0,00" aria-label="Precio unitario final con IVA" required></td>
     <td><input class="row-total" type="text" value="${money.format(0)}" readonly aria-label="Precio total final"></td>
-    <td><button class="remove-row" type="button" title="Quitar fila" aria-label="Quitar fila">×</button></td>
+    <td class="actions-column"><button class="remove-row" type="button" title="Quitar fila" aria-label="Quitar fila">×</button></td>
   `;
   itemsBody.append(row);
   row.addEventListener("input", calculateTotals);
+  const unitPriceInput = row.querySelector(".unit-price");
+  unitPriceInput.addEventListener("focus", () => {
+    const value = parseMoneyInput(unitPriceInput.value);
+    unitPriceInput.value = value ? String(value).replace(".", ",") : "";
+  });
+  unitPriceInput.addEventListener("blur", () => {
+    const value = parseMoneyInput(unitPriceInput.value);
+    unitPriceInput.value = value ? money.format(value) : "";
+    calculateTotals();
+  });
   row.querySelector(".remove-row").addEventListener("click", () => {
     if (itemsBody.children.length > 1) {
       row.remove();
@@ -42,13 +52,23 @@ function calculateTotals() {
   let total = 0;
   itemsBody.querySelectorAll("tr").forEach(row => {
     const quantity = Number(row.querySelector(".quantity").value) || 0;
-    const unitPrice = Number(row.querySelector(".unit-price").value) || 0;
+    const unitPrice = parseMoneyInput(row.querySelector(".unit-price").value);
     const rowTotal = quantity * unitPrice;
     total += rowTotal;
     row.querySelector(".row-total").value = money.format(rowTotal);
+    row.querySelector(".detail-cell").dataset.printValue = row.querySelector(".detail").value;
   });
   grandTotal.textContent = money.format(total);
   saveDraft();
+}
+
+function parseMoneyInput(value) {
+  const normalized = String(value)
+    .replace(/[^\d,.-]/g, "")
+    .replace(/\./g, "")
+    .replace(",", ".");
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
 }
 
 function collectData() {
@@ -62,7 +82,7 @@ function collectData() {
     items: [...itemsBody.querySelectorAll("tr")].map(row => ({
       quantity: row.querySelector(".quantity").value,
       detail: row.querySelector(".detail").value,
-      unitPrice: row.querySelector(".unit-price").value
+      unitPrice: parseMoneyInput(row.querySelector(".unit-price").value) || ""
     }))
   };
 }

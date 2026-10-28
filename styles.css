@@ -104,9 +104,13 @@ td input { padding: 10px; width: 100%; }
   input, textarea { background: transparent; border: 0; padding: 4px 0; }
   th { background: var(--navy) !important; print-color-adjust: exact; }
   td { padding: 7px; }
-  table { min-width: 700px; table-layout: fixed; }
-  .quantity-column { width: 115px; }
-  .price-column, .total-column { width: 190px; }
-  .actions-column { width: 46px; }
+  table { min-width: 0; table-layout: fixed; width: 100%; }
+  .quantity-column { width: 75px; }
+  .price-column, .total-column { width: 125px; }
+  .actions-column { display: none; width: 0; }
+  .detail-cell { overflow-wrap: anywhere; white-space: normal; }
+  .detail-cell .detail { display: none; }
+  .detail-cell::after { content: attr(data-print-value); display: block; overflow-wrap: anywhere; white-space: normal; }
   .table-wrap { overflow: visible; }
+  tr { break-inside: avoid; page-break-inside: avoid; }
 }
